@@ -25,10 +25,16 @@ namespace FormFiller {
             using (var session = new BrowserSession(sessionConfiguration)) {
                 foreach (var ewangelizator in list) {
                     session.Visit("vol/wizard?lang=pl");
-                    //session.Select("Ksiądz / Ojciec").From("reg.title");
+
+                    session.ExecuteScript("$('select#reg\\.title').replaceWith('<input id=\"reg.title\" name=\"reg.title\" />')");
+                    session.FillIn("reg.title").With(ewangelizator.Tytul);
                     session.FillIn("firstName").With(ewangelizator.Imie);
                     session.FillIn("lastName").With(ewangelizator.Nazwisko);
+                    // do sprawdzenia
+                    session.Check("community");
+                    session.ClickButton(" draft ");
 
+                    Console.WriteLine("Please press any key to continue with the next person...");
                     // wait for input on the console to process the next person
                     Console.ReadKey();
                 }
@@ -52,5 +58,6 @@ namespace FormFiller {
         public string Wplata { get; set; }
         public string Imie { get; set; }
         public string Nazwisko { get; set; }
+        public string Tytul { get; set; }
     }
 }
